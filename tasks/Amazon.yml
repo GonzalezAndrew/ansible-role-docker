@@ -1,0 +1,24 @@
+---
+- name: Add Docker GPG key
+  rpm_key:
+    key: "{{ docker_yum_gpg_key }}"
+    state: present
+
+- name: Install Amazon Extras
+  yum:
+    name:
+      - yum-utils
+      - python-pip
+      - amazon-linux-extras
+      - device-mapper-persistent-data
+      - lvm2
+    state: latest
+
+- name: Add Extras Repository
+  # noqa 305
+  command: yum-config-manager --enable extras
+
+- name: Update all packages
+  yum:
+    name: '*'
+    state: latest

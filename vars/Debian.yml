@@ -1,0 +1,12 @@
+---
+pre_packages:
+  - apt-transport-https
+  - ca-certificates
+  - software-properties-common
+  - curl
+  - gnupg2
+
+docker_packages:
+  - docker
+  - docker.io
+  - docker-engine
