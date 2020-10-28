@@ -1,3 +1,4 @@
+![Build](https://github.com/GonzalezAndrew/ansible-role-docker/workflows/Molecule/badge.svg)
 Role Name
 =========
 
