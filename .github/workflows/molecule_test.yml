@@ -3,7 +3,7 @@ name: Molecule
 on: [push]
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         strategy:
             max-parallel: 4
             matrix:
@@ -19,7 +19,11 @@ jobs:
                   python-version: 3.6
             - name: Install dependencies
               run: |
-                  curl https://gist.github.com/geerlingguy/ce883ad4aec6a5f1187ef93bd338511e | sudo bash
+                  sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-common openssh-client
+                  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+                  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+                  sudo apt-get update
+                  sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
                   python3 -m pip install --upgrade pip
                   python3 -m pip install molecule[docker] yamllint ansible-lint docker
             - name: Test with molecule
