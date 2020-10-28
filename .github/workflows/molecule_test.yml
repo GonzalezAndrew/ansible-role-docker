@@ -12,7 +12,7 @@ jobs:
         steps:
             - uses: actions/checkout@v1
               with:
-                  path: ansible-role-terraform
+                  path: "${{ github.repository }}"
             - name: Set up Python
               uses: actions/setup-python@v1
               with:
@@ -24,7 +24,7 @@ jobs:
                   python3 -m pip install molecule[docker] yamllint ansible-lint docker
             - name: Test with molecule
               run: |
-                  molecule test
+                  molecule converge
               env:
                   MOLECULE_DISTRO: ${{ matrix.molecule_distro }}
                   ROLE_NAME: ansible-role-docker
