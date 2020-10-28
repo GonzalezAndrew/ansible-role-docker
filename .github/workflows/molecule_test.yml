@@ -6,8 +6,6 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             max-parallel: 4
-            matrix:
-                molecule_distro: [amazonlinux2, centos8, ubuntu1804, debian9]
 
         steps:
             - uses: actions/checkout@v1
@@ -24,10 +22,9 @@ jobs:
                   python3 -m pip install molecule yamllint ansible-lint docker
             - name: Test with molecule
               run: |
-                  molecule converge
+                  molecule test
               env:
-                  MOLECULE_DISTRO: ${{ matrix.molecule_distro }}
-                  ROLE_NAME: ansible-role-terraform
+                  ROLE_NAME: ansible-role-docker
             - name: Upload to Ansible-Galaxy
               run: |
                   GIT_USER=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)

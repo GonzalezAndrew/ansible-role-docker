@@ -1,2 +1,44 @@
 ---
-# tasks file for ansible role
+- name: Include Variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Remove old docker packages if able
+  package:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ docker_packages }}"
+
+- name: Install OS Dependent Packages
+  include_tasks: "{{ ansible_os_family }}.yml"
+  when: ansible_distribution != 'Amazon'
+
+- name: Amazon Linux
+  include_tasks: Amazon.yml
+  when: ansible_distribution == 'Amazon' and ansible_os_family == 'RedHat'
+
+- name: Install Docker
+  package:
+    name: docker-ce
+    state: present
+  notify: Restart Docker
+  when: ansible_distribution != 'Amazon'
+
+- name: Install Docker on Amazon Linux 2
+  # noqa 305
+  command: amazon-linux-extras install docker -y
+  when: ansible_distribution == 'Amazon'
+
+- name: Install Docker-Compose
+  include_tasks: docker-compose.yml
+
+- name: Systemd daemon-reload
+  systemd:
+    daemon_reload: true
+  when: ansible_service_mgr == 'systemd'
+
+- name: Enable Docker service at startup
+  service:
+    name: docker
+    state: started
+    enabled: true

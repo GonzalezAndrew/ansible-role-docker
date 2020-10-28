@@ -1,37 +1,17 @@
+---
 galaxy_info:
-  role_name: terraform
   author: Andrew Gonzalez
-  description: "Terraform for Linux"
+  description: Ansible role to install Docker on Linux
   license: MIT
-  min_ansible_version: 2.9
+  min_ansible_version: 2.8
   platforms:
     - name: Ubuntu
       versions:
-        - all
-    - name: Amazon
+        - 16.04
+        - 18.04
+    - name: Centos
       versions:
-        - all
-    - name: Debian
-      versions:
-        - all
-    - name: MacOSX
-      versions:
-        - all
-    - name: Alpine
-      versions:
-        - all
-  galaxy_tags:
-    - development
-    - system
-    - cloud
-    - aws
-    - ami
-    - gcp
-    - gcp
-    - droplet
-    - docker
-    - build
-    - infrastructure
-    - centos
-
+        - 7
+        - 8
+  galaxy_tags: []
 dependencies: []
