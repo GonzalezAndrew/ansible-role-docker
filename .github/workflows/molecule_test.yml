@@ -3,9 +3,9 @@ name: Molecule
 on: [push]
 jobs:
     build:
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
         strategy:
-            max-parallel: 4
+            fail-fast: false
             matrix:
                 molecule_distro: [centos7, centos8, ubuntu1804, ubuntu1604]
 
@@ -13,22 +13,10 @@ jobs:
             - uses: actions/checkout@v1
               with:
                   path: "${{ github.repository }}"
-            - name: Set up Python
-              uses: actions/setup-python@v1
-              with:
-                  python-version: 3.6
-            - name: Install dependencies
-              run: |
-                  sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-common openssh-client
-                  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-                  sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-                  sudo apt-get update
-                  sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-                  python3 -m pip install --upgrade pip
-                  python3 -m pip install molecule[docker] yamllint ansible-lint docker
             - name: Test with molecule
-              run: |
-                  molecule test
+              uses: gofrolist/molecule-action@v2
+              with:
+                  molecule_command: test
               env:
                   MOLECULE_DISTRO: ${{ matrix.molecule_distro }}
                   ROLE_NAME: ansible-role-docker
