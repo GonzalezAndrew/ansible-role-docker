@@ -2,7 +2,7 @@
 name: Molecule
 on: [push]
 jobs:
-    build:
+    molecule:
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
@@ -11,15 +11,12 @@ jobs:
 
         steps:
             - uses: actions/checkout@v1
-              with:
-                  path: "${{ github.repository }}"
+
             - name: Test with molecule
               uses: gofrolist/molecule-action@v2
-              with:
-                  molecule_command: test
               env:
                   MOLECULE_DISTRO: ${{ matrix.molecule_distro }}
-                  ROLE_NAME: ansible-role-docker
+
             - name: Upload to Ansible-Galaxy
               run: |
                   GIT_USER=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
