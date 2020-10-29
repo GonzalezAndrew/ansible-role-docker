@@ -21,14 +21,6 @@ jobs:
               run: molecule test
               env:
                   MOLECULE_DISTRO: ${{ matrix.molecule_distro }}
-            - name: Upload to Ansible-Galaxy
-              if: success()
-              run: |
-                  GIT_USER=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
-                  GIT_REPO=$(echo $GITHUB_REPOSITORY | cut -d/ -f2 )
-                  ansible-galaxy role import --api-key $GALAXY_API_KEY $GIT_USER $GIT_REPO
-              env:
-                  GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
 
     publish:
         needs: test
