@@ -1,0 +1,7 @@
+ansible>=2.10,<3
+ansible-lint
+flake8
+molecule[docker]
+pre-commit
+testinfra
+yamllint
