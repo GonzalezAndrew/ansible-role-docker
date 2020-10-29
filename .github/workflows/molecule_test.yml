@@ -2,21 +2,6 @@
 name: Molecule
 on: [push]
 jobs:
-    lint:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-python@v2
-              with:
-                  python-version: 3.9
-            - name: Install dependencies
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install --upgrade --requirement requirements.txt
-            - name: Set up pre-commit
-              run: pre-commit install-hooks
-            - name: Run pre-commit on all files
-              run: pre-commit run --all-files
     test:
         runs-on: ubuntu-latest
         strategy:
@@ -36,6 +21,28 @@ jobs:
               run: molecule test
               env:
                   MOLECULE_DISTRO: ${{ matrix.molecule_distro }}
+            - name: Upload to Ansible-Galaxy
+              if: success()
+              run: |
+                  GIT_USER=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
+                  GIT_REPO=$(echo $GITHUB_REPOSITORY | cut -d/ -f2 )
+                  ansible-galaxy role import --api-key $GALAXY_API_KEY $GIT_USER $GIT_REPO
+              env:
+                  GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
+
+    publish:
+        needs: test
+        if: ${{ github.ref == 'master' }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-python@v2
+              with:
+                  python-version: 3.9
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install --upgrade --requirement requirements.txt
             - name: Upload to Ansible-Galaxy
               run: |
                   GIT_USER=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
