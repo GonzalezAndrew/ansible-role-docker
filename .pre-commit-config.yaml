@@ -9,11 +9,11 @@ repos:
           - id: check-yaml
             files: .*\.(yaml|yml)$
     - repo: https://github.com/adrienverge/yamllint.git
-      rev: v1.33.0
+      rev: v1.35.1
       hooks:
           - id: yamllint
     - repo: https://github.com/ansible/ansible-lint
-      rev: v6.22.1
+      rev: v24.2.1
       hooks:
           - id: ansible-lint
             verbose: true
